@@ -3,3 +3,11 @@ export const coursesData = async () => {
     const data = res.json()
     return data || []
 }
+
+
+
+export const featuredCoursesData = async () => {
+    const res = await fetch(`${process.env.NEXT_CLIENT_API}/featuredCourses`);
+    const data = res.json()
+    return data || []
+}
