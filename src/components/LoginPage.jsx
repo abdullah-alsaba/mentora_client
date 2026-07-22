@@ -1,14 +1,42 @@
 "use client";
 
-import { Button, Input } from "@heroui/react";
+import { Button, Input, toast } from "@heroui/react";
 
 import Link from "next/link";
 
 import { Mail, Lock, ArrowRight } from "lucide-react";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 export default function Login() {
+const router = useRouter()
+  const handelSignIn = async (e) => {
+   e.preventDefault();
+   const formData = new FormData(e.currentTarget);
+    const user = Object.fromEntries(formData.entries());
+   
+    const { data, error } = await authClient.signIn.email({
+      email: user.email,
+      password: user.password,
+    });
+
+
+
+
+    if (error) {
+      toast.error("Check Your Email and Password")
+      return;
+    }
+    if (data) {
+      toast.success("Successfully Logged In")
+      router.push("/")
+    }
+}
+
+
+
   return (
     <div className="min-h-[80vh] flex flex-col bg-slate-50">
       <div className="flex items-center justify-center p-4">
@@ -53,7 +81,7 @@ export default function Login() {
               </div>
             </div>
 
-            <form className="space-y-6">
+            <form onSubmit={handelSignIn} className="space-y-6">
               <div className="space-y-2">
                 <label
                   htmlFor="email"
@@ -65,6 +93,7 @@ export default function Login() {
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                   <input
                     type="email"
+                    name="email"
                     placeholder="Enter your email"
                     className="w-full h-14 pl-12 pr-4 border-2 border-slate-200 rounded-2xl focus:outline-none focus:border-blue-600"
                   />
@@ -78,15 +107,17 @@ export default function Login() {
                 >
                   Password
                 </label>
-                <Input
-                  id="password"
-                  required
-                  placeholder="••••••••"
-                  type="password"
-                  name="password"
-                  startContent={<Lock className="w-5 h-5 text-slate-400" />}
-                  className="border-2 border-slate-200 hover:border-blue-600/50 focus-within:border-blue-600 transition-all duration-300 h-14 bg-white w-full rounded-2xl"
-                />
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="••••••••"
+                    required
+                    className="w-full h-14 pl-12 pr-4 border-2 border-slate-200 rounded-2xl focus:outline-none focus:border-blue-600"
+                  />
+                </div>
               </div>
               <div className="flex justify-end">
                 <Link
