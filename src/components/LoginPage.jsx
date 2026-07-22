@@ -56,7 +56,7 @@ const router = useRouter()
 
             <div className="space-y-4">
               <Button
-                variant="bordered"
+                variant="outline"
                 className="w-full h-12 font-bold rounded-2xl border-slate-200 hover:bg-slate-50 transition-colors gap-3"
               >
                 <Image
