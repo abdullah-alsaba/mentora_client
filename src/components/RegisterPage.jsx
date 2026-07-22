@@ -1,13 +1,14 @@
 'use client';
 
-import { Button, Input } from '@heroui/react';
+import { Button, Input, toast } from '@heroui/react';
 
 import Link from 'next/link';
 import { User, Mail, Lock, ArrowRight } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
+import { useRouter } from "next/navigation";
 
 export default  function Register() {
-
+const router= useRouter() 
   
   const handelSignUp = async (e) => {
     e.preventDefault()
@@ -19,10 +20,20 @@ export default  function Register() {
       email: user.email,
       password: user.password,
       image: user.image,
-      callbackURL: "/",
+   
 
     });
-    console.log(data,error)
+    
+   if (error) {
+     toast.error("Try Again After Sometimes")
+     return;
+   }
+
+    if (data) {
+      toast.success("Signup Successfully Done")
+      router.push("/")
+  }
+   
 
 }
 
