@@ -4,8 +4,30 @@ import { Button, Input } from '@heroui/react';
 
 import Link from 'next/link';
 import { User, Mail, Lock, ArrowRight } from 'lucide-react';
+import { authClient } from '@/lib/auth-client';
 
-export default function Register() {
+export default  function Register() {
+
+  
+  const handelSignUp = async (e) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const user =  Object.fromEntries(formData.entries())
+    
+    const { data, error } = await authClient.signUp.email({
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      image: user.image,
+      callbackURL: "/",
+
+    });
+    console.log(data,error)
+
+}
+
+
+
 
     return (
       <div className="min-h-[80vh] flex flex-col bg-slate-50 py-12">
@@ -23,7 +45,7 @@ export default function Register() {
                 </p>
               </div>
 
-              <form className="space-y-6">
+              <form onSubmit={handelSignUp} className="space-y-6">
                 <div className="space-y-2">
                   <label
                     htmlFor="name"
@@ -56,6 +78,7 @@ export default function Register() {
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
                       type="email"
+                      name='email'
                       placeholder="Enter your email"
                       className="w-full h-14 pl-12 pr-4 border-2 border-slate-200 rounded-2xl focus:outline-none focus:border-blue-600"
                     />
@@ -117,6 +140,7 @@ export default function Register() {
                 <p className="text-sm text-slate-500 font-medium">
                   Already have an account?{" "}
                   <Link
+                   
                     href="/login"
                     className="text-blue-600 font-black hover:underline underline-offset-4 transition-all"
                   >
